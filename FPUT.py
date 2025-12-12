@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
 
-N_PARTICLES = 32
-ALPHA = 0.25
+N = 32
+ALPHA = 0.1
 DT = 0.1
-STEPS_PER_FRAME = 20
+STEPS_PER_FRAME = 50
 TOTAL_FRAMES = 3000
 
 
@@ -36,8 +36,8 @@ def get_energies(u, v, modes, freqs_sq):
 
 
 def run_simulation():
-    main_diag = 2 * np.ones(N_PARTICLES - 1)
-    off_diag = -1 * np.ones(N_PARTICLES - 2)
+    main_diag = 2 * np.ones(N - 1)
+    off_diag = -1 * np.ones(N - 2)
     matrix_a = (
         np.diag(main_diag) +
         np.diag(off_diag, k=1) +
@@ -49,10 +49,10 @@ def run_simulation():
     freqs_sq = eigenvals[idx]
     modes = eigenvecs[:, idx]
 
-    u = np.zeros(N_PARTICLES + 1)
-    x_axis = np.arange(N_PARTICLES + 1)
-    u[1:-1] = 10.0 * np.sin(np.pi * x_axis[1:-1] / N_PARTICLES)
-    v = np.zeros(N_PARTICLES + 1)
+    u = np.zeros(N + 1)
+    x_axis = np.arange(N + 1)
+    u[1:-1] = 2.0 * np.sin(np.pi * x_axis[1:-1] / N)
+    v = np.zeros(N + 1)
     acc = get_acceleration(u, ALPHA)
 
     history_u = []
@@ -81,7 +81,7 @@ def main():
     line_particles, = ax1.plot(
         [], [], 'o-', color='royalblue', markersize=5, lw=1
     )
-    ax1.set_xlim(0, N_PARTICLES)
+    ax1.set_xlim(0, N)
     ax1.set_ylim(-15, 15)
     ax1.set_ylabel("Displacement")
     ax1.grid(True, alpha=0.3)
@@ -125,7 +125,6 @@ def main():
         interval=20,
         blit=True
     )
-
     anim.save("FPUT_Simulation.gif", fps=30)
     plt.show()
 
